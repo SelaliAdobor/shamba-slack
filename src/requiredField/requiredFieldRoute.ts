@@ -49,7 +49,17 @@ export = <fastify.Plugin<Server, IncomingMessage, ServerResponse, never>>(
       }
 
       const fields: Array<any> = teamProfile["profile"]["fields"];
+
       let field = fields.find(field => field["label"] == fieldName);
+
+      if (field == null) {
+        reply
+          .code(200)
+          .send("🤔I couldn't find that field in your team's profile");
+        request.log.info(
+          `Could not find field in Slack: ${teamId}, Field Name: ${fieldName}`
+        );
+      }
 
       let existingRequiredField = await RequiredFieldModel.findOne({
         fieldName: fieldName
