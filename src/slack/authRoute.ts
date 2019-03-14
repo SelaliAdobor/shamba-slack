@@ -53,7 +53,6 @@ export = <fastify.Plugin<Server, IncomingMessage, ServerResponse, never>>(
         userId: oauthResult["user_id"],
         accessToken: oauthResult["access_token"]
       });
-
       let isNewTeam = await updateOrCreateTeamToken(team);
       request.log.info(
         `Retrived OAuth token for team. Name: ${

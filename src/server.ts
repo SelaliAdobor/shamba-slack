@@ -5,39 +5,41 @@ require("dotenv").config();
 
 const monogoUri = process.env.MONGODB_URI;
 if (monogoUri == null) {
-    throw new Error("MONGODB_URI not set");
+  throw new Error("MONGODB_URI not set");
 }
 (<any>mongoose).Promise = global.Promise;
 
 const port = Number(process.env.PORT) || 1234;
 
 const server = fastify({
-    logger: {
-        level: "trace",
-    },
+  logger: {
+    level: "trace"
+  }
 });
 
 server.register(require("fastify-formbody"));
 server.register(fastifyMongoose, monogoUri);
 
 server.register(require("./slack/authRoute"));
+server.register(require("./requiredField/requiredFieldRoute"));
+
 server.get("/", async () => {
-    return "Hello World!";
+  return "Hello World!";
 });
 
 const start = async () => {
-    try {
-        await server.listen(port, "0.0.0.0");
+  try {
+    await server.listen(port, "0.0.0.0");
 
-        server.log.info(server.printRoutes());
+    server.log.info(server.printRoutes());
 
-        let address = server.server.address();
+    let address = server.server.address();
 
-        server.log.info(`Listening on ${JSON.stringify(address)}`);
-    } catch (err) {
-        server.log.error(err);
-        process.exit(1);
-    }
+    server.log.info(`Listening on ${JSON.stringify(address)}`);
+  } catch (err) {
+    server.log.error(err);
+    process.exit(1);
+  }
 };
 
 start();
