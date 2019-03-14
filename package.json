@@ -1,0 +1,39 @@
+{
+    "name": "slacksnax-v2",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/server.js",
+    "scripts": {
+        "build-ts": "tsc",
+        "postinstall": "npm run build-ts",
+        "start": "npm run serve",
+        "serve": "node dist/server.js",
+        "watch-node": "nodemon dist/server.js",
+        "watch-ts": "tsc -w",
+        "lint": "tslint -c tslint.json 'src/**/*.ts'"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/mongodb": "^3.1.21",
+        "@types/mongoose": "^5.3.21",
+        "prettier": "^1.16.4",
+        "tslint-config-prettier": "^1.18.0",
+        "tslint-plugin-prettier": "^2.0.1",
+        "typescript": "^3.3.3333"
+    },
+    "dependencies": {
+        "@slack/client": "^4.10.0",
+        "@types/node": "^11.10.5",
+        "@types/request-promise": "^4.1.42",
+        "dotenv": "^6.2.0",
+        "fastify": "^2.0.1",
+        "fastify-formbody": "^3.1.0",
+        "http": "0.0.0",
+        "mongoose": "^5.4.17",
+        "reflect-metadata": "^0.1.13",
+        "request": "^2.88.0",
+        "request-promise": "^4.2.4",
+        "typegoose": "^5.6.0"
+    }
+}
