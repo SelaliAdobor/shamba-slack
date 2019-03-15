@@ -2,21 +2,21 @@ import { prop, Typegoose, ModelType, InstanceType } from "typegoose";
 
 export class RequiredField extends Typegoose {
   @prop({ required: true })
-  fieldName: string;
+  fieldName!: string;
   @prop({ required: false })
-  rationale: string | null;
-  constructor({});
-  constructor(args: { fieldName: string; rationale: string | null }) {
-    super();
+  rationale?: string | null;
 
-    this.fieldName = args.fieldName;
-    this.rationale = args.rationale;
+  static create(args: { fieldName: string; rationale?: string | null }) {
+    let field = new RequiredField();
+
+    field.fieldName = args.fieldName;
+    field.rationale = args.rationale;
+    return field;
   }
 }
 
-export const RequiredFieldModel = new RequiredField({}).getModelForClass(
-  RequiredField,
-  {
-    schemaOptions: { timestamps: true }
-  }
-);
+export function getRequiredFieldModelForTeam(teamId: string) {
+  return new RequiredField().getModelForClass(RequiredField, {
+    schemaOptions: { timestamps: true, collection: `required-fields-${teamId}` }
+  });
+}

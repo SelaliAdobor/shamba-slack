@@ -51,7 +51,9 @@ export = <fastify.Plugin<Server, IncomingMessage, ServerResponse, never>>(
         teamId: teamId,
         teamName: oauthResult["team_name"],
         userId: oauthResult["user_id"],
-        accessToken: oauthResult["access_token"]
+        accessToken: oauthResult["access_token"],
+        botAccessToken: oauthResult["bot"]["bot_access_token"],
+        botUserId: oauthResult["bot"]["bot_user_id"]
       });
       let isNewTeam = await updateOrCreateTeamToken(team);
       request.log.info(

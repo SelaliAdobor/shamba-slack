@@ -1,7 +1,7 @@
 import * as fastify from "fastify";
 import { Server, IncomingMessage, ServerResponse } from "http";
 import { WebClient } from "@slack/client";
-import { RequiredField, RequiredFieldModel } from "./requiredField";
+import { RequiredField, getRequiredFieldModelForTeam } from "./requiredField";
 import { TeamModel } from "../slack/team";
 const web = new WebClient();
 
@@ -37,7 +37,7 @@ export = <fastify.Plugin<Server, IncomingMessage, ServerResponse, never>>(
         return;
       }
       let teamProfile = <any>await web.team.profile.get({
-        token: matchingTeam.accessToken
+        token: matchingTeam.userAccessToken
       });
 
       if (!teamProfile.ok) {
@@ -60,7 +60,7 @@ export = <fastify.Plugin<Server, IncomingMessage, ServerResponse, never>>(
           `Could not find field in Slack: ${teamId}, Field Name: ${fieldName}`
         );
       }
-
+      let RequiredFieldModel = getRequiredFieldModelForTeam(teamId);
       let existingRequiredField = await RequiredFieldModel.findOne({
         fieldName: fieldName
       });
@@ -72,17 +72,11 @@ export = <fastify.Plugin<Server, IncomingMessage, ServerResponse, never>>(
         );
       }
 
-      let requiredField: RequiredField = new RequiredField({
+      let requiredField: RequiredField = RequiredField.create({
         fieldName: field["label"]
       });
-
-      new RequiredFieldModel(requiredField)
-        .getModelForClass(RequiredField, {
-          schemaOptions: {
-            collection: `required-fields-${teamId}`
-          }
-        })
-        .save();
+      RequiredFieldModel = getRequiredFieldModelForTeam(teamId);
+      new RequiredFieldModel(requiredField).save();
       request.log.info(
         `Created required field. Team: ${teamId}, Field Name: ${fieldName}`
       );
